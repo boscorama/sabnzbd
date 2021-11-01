@@ -894,6 +894,7 @@ SPECIAL_BOOL_LIST = (
     "osx_menu",
     "osx_speed",
     "win_menu",
+    "disable_xapp",
     "allow_incomplete_nzb",
     "rss_filenames",
     "ipv6_hosting",

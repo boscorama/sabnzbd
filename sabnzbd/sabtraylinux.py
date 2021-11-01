@@ -23,17 +23,23 @@ import gi
 from gi.repository import Gtk, GLib
 import logging
 
-try:
-    gi.require_version("XApp", "1.0")
-    from gi.repository import XApp
-
-    if not hasattr(XApp, "StatusIcon"):
-        raise ImportError
-    HAVE_XAPP = True
-    logging.debug("XApp found: %s" % XApp)
-except Exception:
+import sabnzbd.cfg as cfg
+if cfg.disable_xapp():
     HAVE_XAPP = False
-    logging.debug("XApp not available, falling back to Gtk.StatusIcon")
+    logging.debug("Forcing use of Gtk.StatusIcon")
+else:
+    try:
+        gi.require_version("XApp", "1.0")
+        from gi.repository import XApp
+
+        if not hasattr(XApp, "StatusIcon"):
+            raise ImportError
+        HAVE_XAPP = True
+        logging.debug("XApp found: %s" % XApp)
+    except Exception:
+        HAVE_XAPP = False
+        logging.debug("XApp not available, falling back to Gtk.StatusIcon")
+
 from time import sleep
 import subprocess
 from threading import Thread
@@ -42,7 +48,6 @@ from os.path import abspath
 import sabnzbd
 from sabnzbd.panic import launch_a_browser
 import sabnzbd.api as api
-import sabnzbd.cfg as cfg
 from sabnzbd.misc import to_units
 
 
